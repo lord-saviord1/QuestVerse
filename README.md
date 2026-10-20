@@ -31,6 +31,16 @@ The app runs without Supabase: pages are open and a notice says accounts are not
 
 Google note: an OAuth app left in "Testing" mode in Google Cloud is limited to a small list of test users. Check Google's current rules and publish the app before a public launch.
 
+## Design
+
+The look is "Cloud bricks": a painted sky, brick-style cards with studs, and flat outlined shapes with hard shadows.
+
+- Colours and spacing are variables at the top of `src/styles/global.css`.
+- Fonts are self-hosted: Fredoka for headings and Atkinson Hyperlegible for body text (both under the SIL Open Font Licence).
+- `src/assets/clouds.webp` is a generated image. Its size is about 21 kB.
+- Colour pairs were checked for WCAG AA contrast. Animation stops when the phone asks for reduced motion.
+- `src/features/quests/sampleQuests.ts` holds placeholder quests, marked "Sample" in the app. Replace them with the real list.
+
 ## Scripts
 
 | Script              | What it does                          |
