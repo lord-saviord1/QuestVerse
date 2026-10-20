@@ -14,7 +14,7 @@ export function OnboardingPage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  if (!user) return <p className="empty">Sign in first, then come back to this page.</p>
+  if (!user) return null
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
@@ -40,63 +40,38 @@ export function OnboardingPage() {
   }
 
   return (
-    <>
+    <section>
       <h1>About you</h1>
-      <p className="lede">
-        We use this to place you in your faculty, department and level on campus.
-      </p>
+      <p>We use this to place you in your faculty, department and level on campus.</p>
       <form onSubmit={handleSubmit}>
-        <div className="field">
-          <label htmlFor="faculty">Faculty</label>
-          <input
-            id="faculty"
-            className="input"
-            required
-            value={faculty}
-            onChange={(e) => setFaculty(e.target.value)}
-          />
-        </div>
+        <label htmlFor="faculty">Faculty</label>
+        <input id="faculty" required value={faculty} onChange={(e) => setFaculty(e.target.value)} />
 
-        <div className="field">
-          <label htmlFor="department">Department</label>
-          <input
-            id="department"
-            className="input"
-            required
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
-          />
-        </div>
+        <label htmlFor="department">Department</label>
+        <input
+          id="department"
+          required
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+        />
 
-        <div className="field">
-          <label htmlFor="level">Level</label>
-          <select
-            id="level"
-            className="input"
-            required
-            value={level}
-            onChange={(e) => setLevel(e.target.value)}
-          >
-            <option value="" disabled>
-              Choose your level
+        <label htmlFor="level">Level</label>
+        <select id="level" required value={level} onChange={(e) => setLevel(e.target.value)}>
+          <option value="" disabled>
+            Choose your level
+          </option>
+          {LEVELS.map((l) => (
+            <option key={l} value={l}>
+              {l}
             </option>
-            {LEVELS.map((l) => (
-              <option key={l} value={l}>
-                {l}
-              </option>
-            ))}
-          </select>
-        </div>
+          ))}
+        </select>
 
-        <button type="submit" className="btn" disabled={saving} style={{ marginTop: 16 }}>
-          {saving ? 'Saving…' : 'Save and continue'}
+        <button type="submit" disabled={saving}>
+          {saving ? 'Saving…' : 'Continue'}
         </button>
       </form>
-      {error && (
-        <p className="error" role="alert">
-          {error}
-        </p>
-      )}
-    </>
+      {error && <p role="alert">{error}</p>}
+    </section>
   )
 }
