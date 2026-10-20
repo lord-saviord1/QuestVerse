@@ -62,3 +62,4 @@ The `@` alias points to `src`, so `@/lib/supabase` means `src/lib/supabase`.
 ## Licence
 
 Not decided yet.
+v1
