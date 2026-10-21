@@ -13,10 +13,10 @@ export function SignInPage() {
 
   if (!isSupabaseConfigured) {
     return (
-      <section>
+      <>
         <h1>Sign in</h1>
-        <p>Accounts are not set up yet.</p>
-      </section>
+        <p className="empty">Accounts are off while we test.</p>
+      </>
     )
   }
 
@@ -43,10 +43,10 @@ export function SignInPage() {
   }
 
   return (
-    <section>
+    <>
       <h1>Sign in</h1>
 
-      <button type="button" onClick={handleGoogle}>
+      <button type="button" className="btn" onClick={handleGoogle}>
         Continue with Google
       </button>
       <p>
@@ -55,22 +55,34 @@ export function SignInPage() {
       </p>
 
       <form onSubmit={handleEmail}>
-        <label htmlFor="email">Or get a sign-in link by email</label>
-        <input
-          id="email"
-          type="email"
-          autoComplete="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <button type="submit" disabled={status === 'sending'}>
+        <div className="field">
+          <label htmlFor="email">Or get a sign-in link by email</label>
+          <input
+            id="email"
+            className="input"
+            type="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <button
+          type="submit"
+          className="btn btn--ghost"
+          disabled={status === 'sending'}
+          style={{ marginTop: 12 }}
+        >
           {status === 'sending' ? 'Sending…' : 'Email me a link'}
         </button>
       </form>
 
-      {status === 'sent' && <p>Check your email and tap the link to sign in.</p>}
-      {error && <p role="alert">{error}</p>}
-    </section>
+      {status === 'sent' && <p role="status">Check your email and tap the link to sign in.</p>}
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
+    </>
   )
 }
