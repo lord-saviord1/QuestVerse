@@ -479,3 +479,61 @@ a.brick:active {
   font-size: 0.95rem;
   color: var(--ink-soft);
 }
+
+/* ---------- vault ---------- */
+
+.chip--done {
+  color: var(--cloud);
+  background: var(--ink);
+}
+
+.vault-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.photo-card {
+  overflow: hidden;
+  background: var(--cloud);
+  border: var(--line);
+  border-radius: var(--r-brick);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.photo-card img,
+.photo-card .blob-loading {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #fff;
+  border-bottom: var(--line);
+}
+
+.photo-card__body {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px 12px;
+  font-size: 0.95rem;
+}
+
+.photo-card__body span {
+  color: var(--ink-soft);
+}
+
+.link-button {
+  justify-self: start;
+  min-height: 44px;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: var(--blue);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}

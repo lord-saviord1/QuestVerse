@@ -1,10 +1,12 @@
 import { Link, useParams } from 'react-router-dom'
 import { findQuest } from '@/features/quests/sampleQuests'
 import { DIFFICULTY_LABEL } from '@/features/quests/types'
+import { useSavedPhotos } from '@/features/photos/useSavedPhotos'
 
 export function QuestDetailPage() {
   const { id } = useParams()
   const quest = findQuest(id)
+  const { photos } = useSavedPhotos()
 
   if (!quest) {
     return (
@@ -28,6 +30,9 @@ export function QuestDetailPage() {
         <span className={`chip chip--${quest.difficulty}`}>
           {DIFFICULTY_LABEL[quest.difficulty]}
         </span>
+        {photos.some((photo) => photo.questId === quest.id) && (
+          <span className="chip chip--done">Done</span>
+        )}
         {quest.sample && <span className="chip chip--sample">Sample</span>}
       </div>
       <dl className="facts">
