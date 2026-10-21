@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { BlobImage } from '@/features/photos/BlobImage'
 import { useSavedPhotos } from '@/features/photos/useSavedPhotos'
 import { findQuest } from '@/features/quests/sampleQuests'
+import { describeLabel } from '@/features/places/labelOptions'
 
 const dateFormat = new Intl.DateTimeFormat('en-NG', {
   day: 'numeric',
@@ -51,6 +52,7 @@ export function VaultPage() {
                   <BlobImage blob={photo.blob} alt={`Photo for ${title}`} />
                   <div className="photo-card__body">
                     <strong>{title}</strong>
+                    <span>{describeLabel(photo.label)}</span>
                     <span>{dateFormat.format(photo.createdAt)}</span>
                     <button
                       type="button"

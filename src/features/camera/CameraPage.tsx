@@ -1,11 +1,19 @@
-import { useState, type ChangeEvent } from 'react'
+import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { findQuest } from '@/features/quests/sampleQuests'
 import { compressImage, type CompressedImage } from '@/lib/image'
 import { BlobImage } from '@/features/photos/BlobImage'
 import { newPhotoId, savePhoto } from '@/features/photos/photoStore'
+import type { PhotoLabel, Where } from '@/features/photos/types'
+import {
+  FLOORS,
+  OTHER_PLACE,
+  SAMPLE_PLACES,
+  SPOT_SUGGESTIONS,
+  WHERE_OPTIONS,
+} from '@/features/places/labelOptions'
 
-type Step = 'pick' | 'processing' | 'preview' | 'saving' | 'done'
+type Step = 'pick' | 'processing' | 'preview' | 'label' | 'saving' | 'done'
 
 export function CameraPage() {
   const [params] = useSearchParams()
@@ -13,6 +21,12 @@ export function CameraPage() {
   const [step, setStep] = useState<Step>('pick')
   const [photo, setPhoto] = useState<CompressedImage | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [where, setWhere] = useState<Where | ''>('')
+  const [place, setPlace] = useState('')
+  const [otherPlace, setOtherPlace] = useState('')
+  const [floor, setFloor] = useState('')
+  const [spot, setSpot] = useState('')
+  const [rulesOk, setRulesOk] = useState(false)
 
   if (!quest) {
     return (
@@ -41,8 +55,19 @@ export function CameraPage() {
     }
   }
 
-  async function handleSave() {
-    if (!photo || !quest) return
+  async function handleSave(event: FormEvent) {
+    event.preventDefault()
+    if (!photo || !quest || !where) return
+    const placeName = place === OTHER_PLACE ? otherPlace.trim() : place
+    if (!placeName) return
+
+    const label: PhotoLabel = {
+      where,
+      place: placeName,
+      floor: where === 'inside' ? floor : null,
+      spot: spot.trim() || null,
+    }
+
     setError(null)
     setStep('saving')
     try {
@@ -53,11 +78,11 @@ export function CameraPage() {
         blob: photo.blob,
         width: photo.width,
         height: photo.height,
-        label: null,
+        label,
       })
       setStep('done')
     } catch (e) {
-      setStep('preview')
+      setStep('label')
       setError(e instanceof Error ? e.message : 'Could not save the photo.')
     }
   }
@@ -92,7 +117,7 @@ export function CameraPage() {
         <strong>Photo rule:</strong> {quest.photoRule}
       </p>
 
-      {photo && (step === 'preview' || step === 'saving') && (
+      {photo && (step === 'preview' || step === 'label' || step === 'saving') && (
         <figure className="photo-preview">
           <BlobImage blob={photo.blob} alt="Your photo, ready to save" />
           <figcaption>
@@ -117,12 +142,134 @@ export function CameraPage() {
             />
           </label>
         )}
-        {(step === 'preview' || step === 'saving') && (
-          <button type="button" className="btn" onClick={handleSave} disabled={busy}>
-            {step === 'saving' ? 'Saving…' : 'Save photo'}
+        {step === 'preview' && (
+          <button type="button" className="btn" onClick={() => setStep('label')}>
+            Use this photo
           </button>
         )}
       </div>
+
+      {(step === 'label' || step === 'saving') && (
+        <form onSubmit={handleSave}>
+          <h2>Where did you take it?</h2>
+
+          <fieldset className="choices">
+            <legend>Where</legend>
+            {WHERE_OPTIONS.map((option) => (
+              <label key={option.value} className="choice">
+                <input
+                  type="radio"
+                  name="where"
+                  value={option.value}
+                  checked={where === option.value}
+                  onChange={() => setWhere(option.value)}
+                  required
+                />
+                <span>
+                  <strong>{option.label}</strong>
+                  <small>{option.hint}</small>
+                </span>
+              </label>
+            ))}
+          </fieldset>
+
+          <div className="field">
+            <label htmlFor="place">Building or place</label>
+            <select
+              id="place"
+              className="input"
+              required
+              value={place}
+              onChange={(e) => setPlace(e.target.value)}
+            >
+              <option value="" disabled>
+                Choose a place
+              </option>
+              {SAMPLE_PLACES.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+              <option value={OTHER_PLACE}>Other (type it)</option>
+            </select>
+          </div>
+
+          {place === OTHER_PLACE && (
+            <div className="field">
+              <label htmlFor="other-place">Name of the place</label>
+              <input
+                id="other-place"
+                className="input"
+                required
+                value={otherPlace}
+                onChange={(e) => setOtherPlace(e.target.value)}
+              />
+            </div>
+          )}
+
+          {where === 'inside' && (
+            <div className="field">
+              <label htmlFor="floor">Floor</label>
+              <select
+                id="floor"
+                className="input"
+                required
+                value={floor}
+                onChange={(e) => setFloor(e.target.value)}
+              >
+                <option value="" disabled>
+                  Choose a floor
+                </option>
+                {FLOORS.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <div className="field">
+            <label htmlFor="spot">Spot inside or around it (optional)</label>
+            <input
+              id="spot"
+              className="input"
+              list="spot-suggestions"
+              value={spot}
+              onChange={(e) => setSpot(e.target.value)}
+            />
+            <datalist id="spot-suggestions">
+              {SPOT_SUGGESTIONS.map((name) => (
+                <option key={name} value={name} />
+              ))}
+            </datalist>
+          </div>
+
+          <label className="check">
+            <input
+              type="checkbox"
+              checked={rulesOk}
+              onChange={(e) => setRulesOk(e.target.checked)}
+              required
+            />
+            <span>This photo follows the photo rule above.</span>
+          </label>
+
+          <div className="actions">
+            <button type="submit" className="btn" disabled={busy}>
+              {step === 'saving' ? 'Saving…' : 'Save photo'}
+            </button>
+            <button
+              type="button"
+              className="btn btn--ghost"
+              onClick={() => setStep('preview')}
+              disabled={busy}
+            >
+              Back
+            </button>
+          </div>
+        </form>
+      )}
 
       {error && (
         <p className="error" role="alert">
