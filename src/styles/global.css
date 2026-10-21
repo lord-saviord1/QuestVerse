@@ -99,15 +99,38 @@ a {
 
 @keyframes drift {
   from {
-    transform: translateX(-60px);
+    transform: translate(-60px, 0);
   }
   to {
-    transform: translateX(60px);
+    transform: translate(60px, -10px);
+  }
+}
+
+.sky__track--mist {
+  top: 70px;
+}
+
+.sky__mist {
+  display: block;
+  width: 1300px;
+  max-width: none;
+  height: auto;
+  opacity: 0.9;
+  animation: drift-mist 70s ease-in-out infinite alternate;
+}
+
+@keyframes drift-mist {
+  from {
+    transform: translate(90px, 4px);
+  }
+  to {
+    transform: translate(-90px, -8px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sky__clouds {
+  .sky__clouds,
+  .sky__mist {
     animation: none;
   }
 }
