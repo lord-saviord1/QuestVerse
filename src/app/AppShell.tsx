@@ -4,6 +4,9 @@ import { isSupabaseConfigured } from '@/lib/supabase'
 import cloudsUrl from '@/assets/clouds.webp'
 import mistUrl from '@/assets/mist.webp'
 
+// Normal and mirrored copies alternate, so the joins are seamless and the sky covers very wide screens.
+const SKY_COPIES = [false, true, false, true, false]
+
 const TABS = [
   { to: '/quests', label: 'Quests' },
   { to: '/camera', label: 'Camera' },
@@ -22,24 +25,30 @@ export function AppShell() {
     <div className="shell">
       <div className="sky" aria-hidden="true">
         <div className="sky__track">
-          <img
-            className="sky__clouds"
-            src={cloudsUrl}
-            alt=""
-            width={1600}
-            height={640}
-            decoding="async"
-          />
+          {SKY_COPIES.map((flip, i) => (
+            <img
+              key={i}
+              className={flip ? 'sky__img sky__img--flip' : 'sky__img'}
+              src={cloudsUrl}
+              alt=""
+              width={1600}
+              height={640}
+              decoding="async"
+            />
+          ))}
         </div>
         <div className="sky__track sky__track--mist">
-          <img
-            className="sky__mist"
-            src={mistUrl}
-            alt=""
-            width={1600}
-            height={480}
-            decoding="async"
-          />
+          {SKY_COPIES.map((flip, i) => (
+            <img
+              key={i}
+              className={flip ? 'sky__img sky__img--flip' : 'sky__img'}
+              src={mistUrl}
+              alt=""
+              width={1600}
+              height={480}
+              decoding="async"
+            />
+          ))}
         </div>
       </div>
 

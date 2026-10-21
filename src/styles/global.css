@@ -80,57 +80,66 @@ a {
   height: min(52svh, 420px);
   overflow: hidden;
   pointer-events: none;
+  /* Fade the bottom so the clouds melt into the page instead of ending in a hard line. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0, #000 60%, transparent 100%);
 }
 
+/* Five copies of each image sit side by side, alternating normal and mirrored.
+   Mirroring makes the joins seamless, so the sky covers any screen width. */
 .sky__track {
   position: absolute;
   top: 0;
   left: 50%;
+  display: flex;
+  width: max-content;
   transform: translateX(-50%);
-}
-
-.sky__clouds {
-  display: block;
-  width: 1000px;
-  max-width: none;
-  height: auto;
   animation: drift 120s ease-in-out infinite alternate;
 }
 
-@keyframes drift {
-  from {
-    transform: translate(-60px, 0);
-  }
-  to {
-    transform: translate(60px, -10px);
-  }
+.sky__img {
+  display: block;
+  flex: none;
+  width: 1000px;
+  max-width: none;
+  height: auto;
+}
+
+.sky__img--flip {
+  transform: scaleX(-1);
 }
 
 .sky__track--mist {
   top: 70px;
-}
-
-.sky__mist {
-  display: block;
-  width: 1300px;
-  max-width: none;
-  height: auto;
   opacity: 0.9;
   animation: drift-mist 70s ease-in-out infinite alternate;
 }
 
-@keyframes drift-mist {
+.sky__track--mist .sky__img {
+  width: 1300px;
+}
+
+@keyframes drift {
   from {
-    transform: translate(90px, 4px);
+    transform: translate(calc(-50% - 60px), 0);
   }
   to {
-    transform: translate(-90px, -8px);
+    transform: translate(calc(-50% + 60px), -10px);
+  }
+}
+
+@keyframes drift-mist {
+  from {
+    transform: translate(calc(-50% + 90px), 4px);
+  }
+  to {
+    transform: translate(calc(-50% - 90px), -8px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sky__clouds,
-  .sky__mist {
+  .sky__track,
+  .sky__track--mist {
     animation: none;
   }
 }
