@@ -618,3 +618,43 @@ a.brick:active {
 form .actions {
   margin-top: 16px;
 }
+
+/* ---------- pin places ---------- */
+
+.pin-list {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pin-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--cloud);
+  border: var(--line);
+  border-radius: var(--r-brick);
+}
+
+.pin-item div {
+  display: grid;
+  min-width: 0;
+}
+
+.pin-item span {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.csv-box {
+  width: 100%;
+  min-height: 160px;
+  padding: 10px 12px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+}

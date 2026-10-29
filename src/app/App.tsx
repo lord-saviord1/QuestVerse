@@ -10,6 +10,7 @@ import { QuestDetailPage } from '@/features/quests/QuestDetailPage'
 import { CameraPage } from '@/features/camera/CameraPage'
 import { VaultPage } from '@/features/vault/VaultPage'
 import { MapPage } from '@/features/map/MapPage'
+import { PinPlacesPage } from '@/features/places/PinPlacesPage'
 
 export function App() {
   return (
@@ -24,6 +25,7 @@ export function App() {
           <Route path="/camera" element={<CameraPage />} />
           <Route path="/vault" element={<VaultPage />} />
           <Route path="/map" element={<MapPage />} />
+          <Route path="/pin-places" element={<PinPlacesPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Route>
